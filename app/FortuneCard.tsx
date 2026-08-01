@@ -16,6 +16,8 @@ export default function FortuneCard() {
   const [item, setItem] = useState("...");
   const [color, setColor] = useState("...");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   // 페이지가 열릴 때, 이 브라우저에 저장돼 있던 기록을 불러온다
   useEffect(() => {
@@ -29,16 +31,7 @@ export default function FortuneCard() {
     }
   }, []);
 
-  function draw() {
-    const newFortune = pickRandom(fortunes);
-    const newItem = pickRandom(luckyItems);
-    const newColor = pickRandom(luckyColors);
-
-    setFortune(newFortune);
-    setItem(newItem);
-    setColor(newColor);
-    setFlipped(true);
-
+  function record(newFortune: string) {
     const entry: HistoryEntry = {
       time: new Date().toLocaleString("ko-KR"),
       fortune: newFortune,
@@ -48,7 +41,49 @@ export default function FortuneCard() {
       const updated = [entry, ...prev]; // 최신순: 새 기록을 맨 앞에
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return updated;
+      // TODO(캡스톤-03 심화실습①): 여기서 Supabase fortunes 테이블에도
+      // INSERT 해서, 브라우저를 넘어 서버에도 기록이 남게 연결한다.
     });
+  }
+
+  function draw() {
+    const newFortune = pickRandom(fortunes);
+    const newItem = pickRandom(luckyItems);
+    const newColor = pickRandom(luckyColors);
+
+    setFortune(newFortune);
+    setItem(newItem);
+    setColor(newColor);
+    setFlipped(true);
+    setAiError("");
+    record(newFortune);
+  }
+
+  async function drawWithAI() {
+    setAiLoading(true);
+    setAiError("");
+    try {
+      const res = await fetch("/api/ai-fortune", { method: "POST" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setAiError(data.error || "AI 운세 생성에 실패했습니다.");
+        return;
+      }
+
+      const newFortune: string = data.fortune || "오늘은 조용히 쉬어가는 게 좋겠어요.";
+      const newItem: string = data.item || pickRandom(luckyItems);
+
+      setFortune(newFortune);
+      setItem(newItem);
+      setColor(pickRandom(luckyColors));
+      setFlipped(true);
+      record(newFortune);
+    } catch (err) {
+      setAiError("AI 운세 생성 중 오류가 발생했습니다.");
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   return (
@@ -63,7 +98,15 @@ export default function FortuneCard() {
           </div>
         </div>
       </div>
-      <button onClick={draw}>운세 뽑기</button>
+
+      <div className="button-row">
+        <button onClick={draw}>운세 뽑기</button>
+        <button onClick={drawWithAI} disabled={aiLoading}>
+          {aiLoading ? "AI가 짓는 중..." : "AI 운세 생성"}
+        </button>
+      </div>
+
+      {aiError && <p className="ai-error">{aiError}</p>}
 
       {history.length > 0 && (
         <div className="history">

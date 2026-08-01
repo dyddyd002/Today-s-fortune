@@ -1,0 +1,76 @@
+import { NextResponse } from "next/server";
+
+// 심화실습②: OpenRouter로 AI가 그때그때 새로 운세를 생성한다.
+// 이 라우트는 서버에서만 실행되므로 OPENROUTER_API_KEY가 브라우저로 노출되지 않는다.
+export async function POST() {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+
+  if (!apiKey) {
+    return NextResponse.json(
+      {
+        error:
+          "OPENROUTER_API_KEY가 설정되어 있지 않습니다. .env.local(로컬)과 Vercel 프로젝트의 Environment Variables(배포)에 키를 추가해주세요.",
+      },
+      { status: 500 }
+    );
+  }
+
+  // 모델은 환경변수로 바꿔치기 가능 (지급받은 팀 Key가 지원하는 모델로 자유롭게 교체)
+  const model = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini";
+
+  const systemPrompt =
+    "너는 한국어로 오늘의 운세를 지어주는 재미있는 운세 앱이다. " +
+    "매번 완전히 새로운 운세를 만든다. " +
+    "형식: 세 줄 이내, 다정한 반말, 뻔한 덕담 대신 위트 있게. " +
+    "운세 본문에 이어서 행운의 아이템 하나를 골라 알려준다. " +
+    '반드시 아래 JSON 형식으로만 답한다: {"fortune": "운세 내용", "item": "행운의 아이템"}';
+
+  try {
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: "오늘의 운세를 지어줘." },
+          ],
+          temperature: 1,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const detail = await response.text();
+      return NextResponse.json(
+        { error: `OpenRouter 호출 실패 (${response.status})`, detail },
+        { status: response.status }
+      );
+    }
+
+    const data = await response.json();
+    const raw: string = data?.choices?.[0]?.message?.content ?? "";
+
+    let fortune = raw.trim();
+    let item = "";
+    try {
+      const parsed = JSON.parse(raw);
+      fortune = parsed.fortune ?? fortune;
+      item = parsed.item ?? "";
+    } catch {
+      // 모델이 JSON이 아닌 일반 텍스트로 답했을 경우, 받은 텍스트를 그대로 운세로 사용
+    }
+
+    return NextResponse.json({ fortune, item, model });
+  } catch (err) {
+    return NextResponse.json(
+      { error: "OpenRouter 요청 중 오류가 발생했습니다.", detail: String(err) },
+      { status: 500 }
+    );
+  }
+}

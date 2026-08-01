@@ -2,3 +2,7 @@ node_modules
 .next
 out
 *.log
+
+# 환경변수 (API Key 등 비밀값) - 절대 커밋하지 않음
+.env
+.env*.local

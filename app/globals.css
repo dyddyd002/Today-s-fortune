@@ -112,3 +112,20 @@ button {
 .history tr:last-child td {
   border-bottom: none;
 }
+
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.button-row button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ai-error {
+  font-size: 12px;
+  color: #ffb4b4;
+  max-width: 320px;
+  text-align: center;
+}
