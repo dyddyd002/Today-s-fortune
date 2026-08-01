@@ -73,3 +73,42 @@ button {
   font-weight: 700;
   cursor: pointer;
 }
+
+.history {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 8px;
+}
+
+.history h2 {
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #ffd977;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.history table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.history th,
+.history td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.history th {
+  color: #ffd977;
+  font-weight: 700;
+}
+
+.history tr:last-child td {
+  border-bottom: none;
+}
