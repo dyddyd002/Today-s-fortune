@@ -320,24 +320,40 @@ export default function FortuneCard() {
                   : undefined
               }
             >
-              <div className="poke-header">오늘의 운세</div>
+              <div className="poke-topbar">
+                <span className="poke-tag">오늘의 운세</span>
+                <span className="poke-type-dot" />
+              </div>
 
-              <div className="poke-art-frame">
-                <span className="poke-art-emoji">
-                  {result ? getItemIcon(result.item) : "❔"}
+              <div className="poke-art-outer">
+                <div className="poke-art-frame">
+                  <span className="poke-art-glow" />
+                  <span className="poke-art-sparkle corner-tl">✦</span>
+                  <span className="poke-art-sparkle corner-tr">✦</span>
+                  <span className="poke-art-sparkle corner-bl">✦</span>
+                  <span className="poke-art-sparkle corner-br">✦</span>
+                  <span className="poke-art-emoji">
+                    {result ? getItemIcon(result.item) : "❔"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="poke-attack-row">
+                <span className="poke-cost-icon">✦</span>
+                <span className="poke-attack-name">
+                  행운의 아이템: {result ? result.item : "..."}
                 </span>
               </div>
 
-              <div className="poke-info-row">
-                <div className="poke-info-badge">
-                  아이템: {result ? result.item : "..."}
-                </div>
-                <div className="poke-info-badge">
-                  색: {result ? result.color : "..."}
-                </div>
+              <div className="poke-flavor-text">
+                {result?.fortune ?? "카드를 뽑으면 오늘의 운세가 나와요."}
               </div>
 
-              <div className="poke-text-box">{result?.fortune ?? "..."}</div>
+              <div className="poke-footer-row">
+                <span className="poke-color-swatch" />
+                행운의 색: {result ? result.color : "..."}
+              </div>
+              <div className="poke-collector-text">오늘의 운세 · Fortune Card</div>
             </div>
           </div>
         </div>
