@@ -20,6 +20,7 @@ export default function FortuneCard() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
   const [todayCount, setTodayCount] = useState<number | null>(null);
+  const [birthDate, setBirthDate] = useState("");
 
   // 페이지가 열릴 때, 이 브라우저에 저장돼 있던 기록을 불러온다
   useEffect(() => {
@@ -90,10 +91,18 @@ export default function FortuneCard() {
   }
 
   async function drawWithAI() {
+    if (!birthDate) {
+      setAiError("생년월일을 먼저 입력해주세요.");
+      return;
+    }
     setAiLoading(true);
     setAiError("");
     try {
-      const res = await fetch("/api/ai-fortune", { method: "POST" });
+      const res = await fetch("/api/ai-fortune", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ birthDate }),
+      });
       const data = await res.json();
 
       if (!res.ok) {
@@ -133,6 +142,16 @@ export default function FortuneCard() {
             <p>행운의 색: {color}</p>
           </div>
         </div>
+      </div>
+
+      <div className="birth-row">
+        <label htmlFor="birthDate">생년월일 (AI 운세에 반영돼요)</label>
+        <input
+          id="birthDate"
+          type="date"
+          value={birthDate}
+          onChange={(e) => setBirthDate(e.target.value)}
+        />
       </div>
 
       <div className="button-row">
