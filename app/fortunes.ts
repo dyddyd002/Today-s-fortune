@@ -44,6 +44,19 @@ export const luckyItems: string[] = [
   "작은 인형",
 ];
 
+export const luckyColors: string[] = [
+  "빨강",
+  "주황",
+  "노랑",
+  "초록",
+  "파랑",
+  "남색",
+  "보라",
+  "하양",
+  "검정",
+  "핑크",
+];
+
 export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
