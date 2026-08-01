@@ -128,7 +128,7 @@ export default function FortuneCard() {
         <div className={`card${flipped ? " flipped" : ""}`}>
           <div className="face front">카드를 눌러보세요</div>
           <div className="face back">
-            <p>{fortune}</p>
+            <p className="fortune-text">{fortune}</p>
             <p>행운의 아이템: {item}</p>
             <p>행운의 색: {color}</p>
           </div>

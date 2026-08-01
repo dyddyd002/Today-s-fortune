@@ -64,6 +64,11 @@ main {
   transform: rotateY(180deg);
 }
 
+.fortune-text {
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
 button {
   padding: 12px 28px;
   border-radius: 999px;
