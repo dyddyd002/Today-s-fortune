@@ -129,3 +129,9 @@ button {
   max-width: 320px;
   text-align: center;
 }
+
+.today-count {
+  font-size: 13px;
+  color: #d9c2ff;
+  margin: 0;
+}

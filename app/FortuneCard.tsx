@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fortunes, luckyItems, luckyColors, pickRandom } from "./fortunes";
+import { supabase } from "./lib/supabaseClient";
 
 type HistoryEntry = {
   time: string;
@@ -18,6 +19,7 @@ export default function FortuneCard() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
+  const [todayCount, setTodayCount] = useState<number | null>(null);
 
   // 페이지가 열릴 때, 이 브라우저에 저장돼 있던 기록을 불러온다
   useEffect(() => {
@@ -29,7 +31,36 @@ export default function FortuneCard() {
     } catch {
       // 저장된 기록이 없거나 읽을 수 없으면 무시
     }
+    fetchTodayCount();
   }, []);
+
+  // 심화실습①: 오늘 자정 이후 fortunes 테이블에 쌓인 행 수 = "오늘 뽑은 사람 수"
+  async function fetchTodayCount() {
+    if (!supabase) return; // Supabase 연동 전이면 그냥 숨긴다
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const { count, error } = await supabase
+      .from("fortunes")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", startOfDay.toISOString());
+
+    if (!error) {
+      setTodayCount(count ?? 0);
+    }
+  }
+
+  // 심화실습①: 서버 창고(Supabase)에도 한 줄 남긴다. 실패해도 화면 동작은 막지 않는다.
+  async function saveToSupabase(newFortune: string, newItem: string, newColor: string) {
+    if (!supabase) return;
+    const { error } = await supabase
+      .from("fortunes")
+      .insert({ fortune: newFortune, item: newItem, color: newColor });
+
+    if (!error) {
+      fetchTodayCount();
+    }
+  }
 
   function record(newFortune: string) {
     const entry: HistoryEntry = {
@@ -41,8 +72,6 @@ export default function FortuneCard() {
       const updated = [entry, ...prev]; // 최신순: 새 기록을 맨 앞에
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return updated;
-      // TODO(캡스톤-03 심화실습①): 여기서 Supabase fortunes 테이블에도
-      // INSERT 해서, 브라우저를 넘어 서버에도 기록이 남게 연결한다.
     });
   }
 
@@ -57,6 +86,7 @@ export default function FortuneCard() {
     setFlipped(true);
     setAiError("");
     record(newFortune);
+    saveToSupabase(newFortune, newItem, newColor);
   }
 
   async function drawWithAI() {
@@ -73,12 +103,14 @@ export default function FortuneCard() {
 
       const newFortune: string = data.fortune || "오늘은 조용히 쉬어가는 게 좋겠어요.";
       const newItem: string = data.item || pickRandom(luckyItems);
+      const newColor = pickRandom(luckyColors);
 
       setFortune(newFortune);
       setItem(newItem);
-      setColor(pickRandom(luckyColors));
+      setColor(newColor);
       setFlipped(true);
       record(newFortune);
+      saveToSupabase(newFortune, newItem, newColor);
     } catch (err) {
       setAiError("AI 운세 생성 중 오류가 발생했습니다.");
     } finally {
@@ -88,6 +120,10 @@ export default function FortuneCard() {
 
   return (
     <>
+      {todayCount !== null && (
+        <p className="today-count">오늘 뽑은 사람 수: {todayCount}명</p>
+      )}
+
       <div className="scene" onClick={draw}>
         <div className={`card${flipped ? " flipped" : ""}`}>
           <div className="face front">카드를 눌러보세요</div>
