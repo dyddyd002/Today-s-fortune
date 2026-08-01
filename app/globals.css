@@ -5,9 +5,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #2c1650;
+  background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet);
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-  color: #fff5e6;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,22 +54,23 @@ main {
 }
 
 .face.front {
-  background: #c98b1f;
-  color: #3a1f0a;
+  background: linear-gradient(135deg, violet, blue, green, yellow, orange, red);
+  color: #fff;
 }
 
 .face.back {
-  background: #58245c;
-  border: 2px solid #ffd977;
+  background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet);
+  border: 3px solid white;
   transform: rotateY(180deg);
+  color: #fff;
 }
 
 button {
   padding: 12px 28px;
   border-radius: 999px;
   border: none;
-  background: #ffd977;
-  color: #3a1f0a;
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
 }
