@@ -43,9 +43,12 @@ export default function FortuneCard() {
       time: new Date().toLocaleString("ko-KR"),
       fortune: newFortune,
     };
-    const updated = [entry, ...history]; // 최신순: 새 기록을 맨 앞에
-    setHistory(updated);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    // 함수형 업데이트: 클릭이 연달아 일어나도 항상 최신 history를 기준으로 쌓는다
+    setHistory((prev) => {
+      const updated = [entry, ...prev]; // 최신순: 새 기록을 맨 앞에
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
   }
 
   return (
