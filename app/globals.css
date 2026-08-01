@@ -70,10 +70,10 @@ main {
   padding: 32px 24px;
 }
 
-/* ===== 타로카드 스타일 ===== */
+/* ===== 포켓몬 카드 스타일 ===== */
 .scene {
   width: 300px;
-  height: 460px;
+  height: 440px;
   perspective: 1400px;
 }
 
@@ -94,22 +94,18 @@ main {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  border-radius: 18px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 26px 22px;
   text-align: center;
-  box-shadow:
-    0 0 0 3px #1b1035,
-    0 0 0 5px var(--lucky-color, #ffd977),
-    0 0 0 8px #1b1035,
-    0 18px 40px rgba(0, 0, 0, 0.45);
+  border: 10px solid var(--lucky-color, #ffd977);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
 .face.front {
+  justify-content: center;
+  gap: 10px;
   background:
     radial-gradient(circle at 50% 30%, rgba(255, 217, 119, 0.18), transparent 60%),
     linear-gradient(160deg, #2c1650, #4a1f5c 55%, #2c1650);
@@ -129,81 +125,75 @@ main {
 }
 
 .face.back {
-  background: linear-gradient(165deg, #2c1650, #4a1f5c 55%, #26123f);
   transform: rotateY(180deg);
+  background: #fdf6e6;
+  color: #2b2b2b;
+  padding: 10px;
+  gap: 8px;
 }
 
-/* 카드 네 귀퉁이 장식 (타로카드 프레임 느낌) */
-.tarot-ornament {
-  position: absolute;
-  font-size: 13px;
-  color: #ffd977;
-  opacity: 0.85;
-}
-
-.tarot-ornament.corner-tl {
-  top: 14px;
-  left: 16px;
-}
-
-.tarot-ornament.corner-tr {
-  top: 14px;
-  right: 16px;
-}
-
-.tarot-ornament.corner-bl {
-  bottom: 14px;
-  left: 16px;
-}
-
-.tarot-ornament.corner-br {
-  bottom: 14px;
-  right: 16px;
-}
-
-.face.back .label {
-  font-family: Georgia, "Nanum Myeongjo", serif;
-  font-size: 13px;
-  letter-spacing: 4px;
-  color: #ffd977;
-  text-transform: uppercase;
-}
-
-.face.back .fortune-text {
+/* 카드 최상단: 오늘의 운세 (포켓몬카드 이름 자리) */
+.poke-header {
+  width: 100%;
+  background: var(--lucky-color, #6b4fa0);
+  color: #fff;
+  font-weight: 800;
   font-size: 15px;
-  line-height: 1.55;
-  white-space: pre-line;
-  max-height: 110px;
-  overflow: hidden;
+  letter-spacing: 1px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* 행운의 아이템: 카드 썸네일 이미지 느낌 */
-.item-thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  background: radial-gradient(circle at 35% 30%, rgba(255, 217, 119, 0.35), rgba(255, 255, 255, 0.05));
-  border: 2px solid var(--lucky-color, #ffd977);
+/* 그 아래: 행운의 아이템 관련 네모난 사진 자리 */
+.poke-art-frame {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  border: 4px solid var(--lucky-color, #6b4fa0);
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0.05));
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
-.item-thumb-emoji {
-  font-size: 30px;
+.poke-art-emoji {
+  font-size: 66px;
   line-height: 1;
 }
 
-.lucky-item-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffe9b0;
+/* 그 아래: 행운의 아이템 / 행운의 색 */
+.poke-info-row {
+  display: flex;
+  width: 100%;
+  gap: 6px;
 }
 
-.lucky-color-name {
-  font-size: 12px;
-  color: #d9c2ff;
+.poke-info-badge {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--lucky-color, #6b4fa0);
+  border-radius: 8px;
+  padding: 5px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2b2b2b;
+}
+
+/* 그 아래: 뽑은 운세 결과 */
+.poke-text-box {
+  width: 100%;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow: auto;
+  color: #2b2b2b;
 }
 
 .reveal-hint {

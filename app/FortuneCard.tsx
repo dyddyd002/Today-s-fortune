@@ -309,10 +309,6 @@ export default function FortuneCard() {
         <div className="scene" onClick={draw}>
           <div className={`card${flipped ? " flipped" : ""}`}>
             <div className="face front">
-              <span className="tarot-ornament corner-tl">✦</span>
-              <span className="tarot-ornament corner-tr">✦</span>
-              <span className="tarot-ornament corner-bl">✦</span>
-              <span className="tarot-ornament corner-br">✦</span>
               <div className="symbol">🔮</div>
               <div className="hint">카드를 눌러보세요</div>
             </div>
@@ -324,24 +320,24 @@ export default function FortuneCard() {
                   : undefined
               }
             >
-              <span className="tarot-ornament corner-tl">✦</span>
-              <span className="tarot-ornament corner-tr">✦</span>
-              <span className="tarot-ornament corner-bl">✦</span>
-              <span className="tarot-ornament corner-br">✦</span>
-              <div className="label">오늘의 운세</div>
-              <div className="fortune-text">{result?.fortune ?? "..."}</div>
+              <div className="poke-header">오늘의 운세</div>
 
-              <div className="item-thumb">
-                <span className="item-thumb-emoji">
+              <div className="poke-art-frame">
+                <span className="poke-art-emoji">
                   {result ? getItemIcon(result.item) : "❔"}
                 </span>
               </div>
-              <div className="lucky-item-name">
-                {result ? result.item : "..."}
+
+              <div className="poke-info-row">
+                <div className="poke-info-badge">
+                  아이템: {result ? result.item : "..."}
+                </div>
+                <div className="poke-info-badge">
+                  색: {result ? result.color : "..."}
+                </div>
               </div>
-              <div className="lucky-color-name">
-                행운의 색: {result ? result.color : "..."}
-              </div>
+
+              <div className="poke-text-box">{result?.fortune ?? "..."}</div>
             </div>
           </div>
         </div>
